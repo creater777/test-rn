@@ -12,8 +12,8 @@ export default function App() {
         <EventContext.Provider value={{error, loading, page, events, setPage, update}}>
             <NativeRouter>
                 <Switch>
+                    <Route exact path="/" component={EventList}/>
                     <Route path="/item/:id" component={EventDetail}/>
-                    <Route path="/" component={EventList}/>
                 </Switch>
             </NativeRouter>
         </EventContext.Provider>

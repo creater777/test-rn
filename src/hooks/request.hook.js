@@ -1,14 +1,14 @@
 import {useCallback, useState, useEffect} from "react";
-import axios from 'axios';
+import axios from "axios";
+import {API_USER, API_KEY} from "@env"
 
 export const PAGE_SIZE = 25;
-export const BASE_URL = "https://creater777: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@api.github.com";
+export const BASE_URL = `https://${API_USER}:${API_KEY}@api.github.com`;
 
 export const useRequest = () => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
     const [data, setData] = useState(null);
-
     const request = useCallback((url, page = 1, method = "GET") => {
         setLoading(true);
         return axios({
