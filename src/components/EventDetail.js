@@ -9,7 +9,6 @@ import AppHeader from "../views/AppHeader";
 const PushEvent = ({event}) =>(
     <View>
         <Text>Комммиты:</Text>
-        {console.log(event)}
         {_.get(event, "payload.commits", []).map(
             commit => <Text key={commit.sha}>Сообщение: {commit.message}</Text>
         )}
