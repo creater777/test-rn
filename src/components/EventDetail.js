@@ -1,10 +1,10 @@
-import React, {useContext} from "react"
+import React from "react"
 import {Text, View} from "react-native";
 import _ from "lodash";
 
 import {parseDate, styles} from "../helpers"
-import EventContext from "../context/EventsContext"
-import AppHeader from "../views/AppHeader";
+import AppHeader from "./AppHeader";
+import {connect} from "react-redux";
 
 const PushEvent = ({event}) =>(
     <View>
@@ -15,13 +15,12 @@ const PushEvent = ({event}) =>(
     </View>
 )
 
-export default ({item, id, match}) => {
-    const context = useContext(EventContext);
-    const event = context.events.find(event => match.params.id === event.id);
+const EventDetail = ({navigation, route, path, events}) => {
+    const event = events.find(event => route.params.id === event.id);
     const created = event && parseDate(event.created_at);
     return (
         <View style={styles.container}>
-            {context && <AppHeader page={context.page} setPage={context.setPage}/>}
+            <AppHeader/>
             <Text>Детали события</Text>
             <Text>Создан: {created && created.date} {created && created.time}</Text>
             <Text>Автор: {event && event.actor.login}</Text>
@@ -31,3 +30,9 @@ export default ({item, id, match}) => {
         </View>
     )
 }
+
+const mapStateToProps = state => ({
+    events: state.data
+});
+
+export default connect(mapStateToProps)(EventDetail)

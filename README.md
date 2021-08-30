@@ -13,6 +13,7 @@ yarn install
 <p>Приложение использует apikey githab, поэтому в файл .env нужно добавить его значение</p>
 
 ```sh
+API_USER=<github login>
 API_KEY=<ваш ключ>
 ```
 

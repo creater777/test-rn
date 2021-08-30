@@ -12,7 +12,7 @@ export const parseDate = date => {
 
 export const styles = StyleSheet.create({
     container: {
-        top: 20,
+        // top: 20,
         flex: 1,
         backgroundColor: "#fff",
         justifyContent: "flex-start",

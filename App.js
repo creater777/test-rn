@@ -1,22 +1,29 @@
 import React from 'react';
-import {NativeRouter, Route, Switch} from 'react-router-native';
+import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import {createStore, applyMiddleware} from 'redux';
+import thunk from 'redux-thunk';
+import {Provider} from 'react-redux'
 
 import EventList from './src/components/EventList';
 import EventDetail from './src/components/EventDetail';
-import EventContext from './src/context/EventsContext';
-import {useEvents} from "./src/hooks/events.hook";
+import eventReducer from './src/store/events.store';
+import AppHeader from "./src/components/AppHeader";
+
+const store = createStore(eventReducer, applyMiddleware(thunk));
+const Stack = createNativeStackNavigator();
 
 export default function App() {
-    const {error, loading, page, events, setPage, update} = useEvents();
+    console.log('app render');
     return (
-        <EventContext.Provider value={{error, loading, page, events, setPage, update}}>
-            <NativeRouter>
-                <Switch>
-                    <Route exact path="/" component={EventList}/>
-                    <Route path="/item/:id" component={EventDetail}/>
-                </Switch>
-            </NativeRouter>
-        </EventContext.Provider>
+        <Provider store={store}>
+            <NavigationContainer initialRouteName="EventList">
+                <Stack.Navigator detachInactiveScreens={true} detachPreviousScreen={true}>
+                    <Stack.Screen name="EventList" component={EventList} header={AppHeader}/>
+                    <Stack.Screen name="EventDetail" component={EventDetail} header={AppHeader}/>
+                </Stack.Navigator>
+            </NavigationContainer>
+        </Provider>
 
     );
 }

@@ -1,15 +1,16 @@
 import React from "react"
-import {StyleSheet, Text, View} from "react-native";
-import {Link, withRouter} from "react-router-native"
+import {Text, View} from "react-native";
 import {parseDate, styles} from "../helpers"
+import {useNavigation} from "@react-navigation/native";
 
-export default withRouter(({item}) => {
+export default ({item}) => {
+    const navigation = useNavigation();
     const date=item && parseDate(item.created_at) || {};
     return <View style={styles.row}>
-        <Link
-            to={`/item/${item.id}`}
-            style={styles.rowNum}
+        <Text onPress={() => {
+            navigation.navigate("EventDetail", {id: item.id})
+        }}
             replace={true}
-        ><Text>{date.date} {date.time} {item.actor.login}</Text></Link>
+        ><Text>{date.date} {date.time} {item.actor.login}</Text></Text>
     </View>
-})
+}

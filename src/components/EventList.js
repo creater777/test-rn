@@ -1,32 +1,40 @@
-import React, {useEffect, useContext} from "react";
+import React, {useEffect} from "react";
 import {FlatList, Text, View} from "react-native";
-import Spinner from "react-native-loading-spinner-overlay";
+import {connect} from 'react-redux'
 
-import AppHeader from "../views/AppHeader";
+import AppHeader from "./AppHeader";
 import ListItem from "../views/ListItem";
-import EventsContext from "../context/EventsContext";
-import {styles} from "../helpers"
+import {styles} from "../helpers";
+import {request} from "../store/events.store";
 
-export default () => {
-    const {error, loading, page, events, setPage, update} = useContext(EventsContext);
+const EventList = ({data, page, request, route, navigation}) => {
+
+    navigation.addListener("onFocus", () => console.log('onFocus'))
 
     useEffect(() => {
         const timer = setInterval(() => {
-            update(page);
+            route.name === "EventList" && request(page)
         }, 60000);
-        return () => { clearInterval(timer)}
-    }, [page]);
+        console.log('mount')
+        request(page);
+        return () => console.log(clearInterval(timer))
+    }, []);
 
     return (
         <View style={styles.container}>
-            <AppHeader page={page} setPage={setPage}/>
-            <Spinner visible={loading}/>
-            {error && <Text>{error}</Text>}
+            <AppHeader/>
             <Text>Страница {page}</Text>
             <FlatList
-                data={events || []}
+                data={data || []}
                 renderItem={ListItem}
             />
         </View>
     )
-}
+};
+
+const mapStateToProps = (store, ownProps) => ({
+    page: store.page,
+    data: store.data
+});
+
+export default connect(mapStateToProps, {request})(EventList)
