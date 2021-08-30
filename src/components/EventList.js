@@ -8,14 +8,10 @@ import {styles} from "../helpers";
 import {request} from "../store/events.store";
 
 const EventList = ({data, page, request, route, navigation}) => {
-
-    navigation.addListener("onFocus", () => console.log('onFocus'))
-
     useEffect(() => {
         const timer = setInterval(() => {
             route.name === "EventList" && request(page)
         }, 60000);
-        console.log('mount')
         request(page);
         return () => console.log(clearInterval(timer))
     }, []);

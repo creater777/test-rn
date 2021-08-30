@@ -32,7 +32,6 @@ export const setPage = page => (dispatch, getState) => {
 };
 
 export const request = (page = 0, method = "GET") => dispatch => {
-    console.log('request');
     dispatch(setLoading(true));
     axios({
         url: "/events?" + new URLSearchParams({
@@ -44,10 +43,8 @@ export const request = (page = 0, method = "GET") => dispatch => {
         method,
         headers: {"Accept": "application/vnd.github.v3+json"}
     }).then(response => {
-        console.log('response')
         dispatch(setData(response.data));
     }).catch(error => {
-        console.log('error', error.message);
         dispatch(setError(error.message));
     });
 };

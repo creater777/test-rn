@@ -14,7 +14,6 @@ const store = createStore(eventReducer, applyMiddleware(thunk));
 const Stack = createNativeStackNavigator();
 
 export default function App() {
-    console.log('app render');
     return (
         <Provider store={store}>
             <NavigationContainer initialRouteName="EventList">
