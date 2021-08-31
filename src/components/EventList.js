@@ -6,6 +6,7 @@ import AppHeader from './AppHeader';
 import ListItem from '../views/ListItem';
 import {styles} from '../helpers';
 import {request} from '../store/events.store';
+import {UPDATE_TIME} from '../config';
 
 const EventList = ({data, page, request, route, navigation}) => {
   const [timer, setTimer] = useState(null);
@@ -16,7 +17,7 @@ const EventList = ({data, page, request, route, navigation}) => {
         setTimer(
           setInterval(() => {
             request(page);
-          }, 60000),
+          }, UPDATE_TIME * 1000),
         );
       }),
     [navigation, page, setTimer, request],
