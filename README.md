@@ -1,7 +1,5 @@
 # Тестовая задача
 
-<p>Написана с использованием expo</p>
-
 ## Установка
 ```sh
 git clone https://github.com/creater777/test-rn
