@@ -17,4 +17,7 @@ export const styles = StyleSheet.create({
   row: {
     padding: 10,
   },
+  error: {
+    backgroundColor: '#eaa',
+  },
 });

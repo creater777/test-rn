@@ -5,6 +5,7 @@ import Spinner from 'react-native-loading-spinner-overlay';
 import {useRoute, useNavigation} from '@react-navigation/native';
 
 import {setPage} from '../store/events.store';
+import {styles} from '../helpers';
 
 const AppHeader = ({error, loading, page, setPage}) => {
   const route = useRoute();
@@ -30,7 +31,7 @@ const AppHeader = ({error, loading, page, setPage}) => {
           }}
         />
       )}
-      {error && <Text>{error}</Text>}
+      {error && <Text style={styles.error}>{error}</Text>}
       <Spinner visible={loading} />
     </View>
   );

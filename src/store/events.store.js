@@ -49,11 +49,9 @@ export const request =
       headers: {Accept: 'application/vnd.github.v3+json'},
     })
       .then(response => {
-        console.log('response');
         dispatch(setData(response.data));
       })
       .catch(error => {
-        console.log('error', error.message);
         dispatch(setError(error.message));
       });
   };

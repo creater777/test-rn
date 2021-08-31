@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import {FlatList, Text, View} from 'react-native';
 import {connect} from 'react-redux';
 
@@ -8,13 +8,28 @@ import {styles} from '../helpers';
 import {request} from '../store/events.store';
 
 const EventList = ({data, page, request, route, navigation}) => {
-  useEffect(() => {
-    const timer = setInterval(() => {
-      route.name === 'EventList' && request(page);
-    }, 60000);
-    request(page);
-    return () => clearInterval(timer);
-  }, [page]);
+  const [timer, setTimer] = useState(null);
+  useEffect(
+    () =>
+      navigation.addListener('focus', () => {
+        request(page);
+        setTimer(
+          setInterval(() => {
+            request(page);
+          }, 60000),
+        );
+      }),
+    [navigation, page, setTimer, request],
+  );
+
+  useEffect(
+    () =>
+      navigation.addListener(
+        'blur',
+        () => timer && clearInterval(timer) && setTimer(null),
+      ),
+    [navigation, setTimer, timer],
+  );
 
   return (
     <View style={styles.container}>

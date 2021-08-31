@@ -8,7 +8,6 @@ import {Provider} from 'react-redux';
 import EventList from './src/components/EventList';
 import EventDetail from './src/components/EventDetail';
 import eventReducer from './src/store/events.store';
-import AppHeader from './src/components/AppHeader';
 
 const store = createStore(eventReducer, applyMiddleware(thunk));
 const Stack = createNativeStackNavigator();
@@ -19,9 +18,7 @@ export default function App() {
       <NavigationContainer initialRouteName="EventList">
         <Stack.Navigator
           screenOptions={{
-              headerShown:false,
-              headerStyle: {display: "none"}
-            // header: AppHeader,
+            headerShown: false,
           }}>
           <Stack.Screen name="EventList" component={EventList} />
           <Stack.Screen name="EventDetail" component={EventDetail} />
