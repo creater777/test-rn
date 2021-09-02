@@ -3,7 +3,6 @@ import {Text, View} from 'react-native';
 import {parseDate, styles} from '../helpers';
 
 export default ({item, navigation}) => {
-  // const navigation = useNavigation()
   const date = (item && parseDate(item.created_at)) || {};
   return (
     <View style={styles.row}>

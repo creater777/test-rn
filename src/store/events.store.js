@@ -1,11 +1,11 @@
 import axios from 'axios';
-import {BASE_URL, PAGE_SIZE} from '../config';
+import {BASE_URL, PAGE_SIZE, UPDATE_TIME} from '../config';
 
 const initialState = {
   data: [],
   error: null,
   loading: false,
-  page: 0,
+  toUpdate: 0,
 };
 
 export const setLoading = loading => ({
@@ -13,28 +13,30 @@ export const setLoading = loading => ({
   loading,
 });
 
-export const setData = data => ({
-  type: 'SET_DATA',
-  data,
-});
+export const setData = data => (dispatch, getState) => {
+  const {toUpdate} = getState();
+  toUpdate && clearTimeout(toUpdate);
+  dispatch({
+    type: 'SET_DATA',
+    data,
+    toUpdate: setTimeout(
+      () =>
+        dispatch({
+          type: 'SET_READY_TO_UPDATE',
+        }),
+      UPDATE_TIME * 1000,
+    ),
+  });
+};
 
 export const setError = error => ({
   type: 'SET_ERROR',
   error,
 });
 
-export const setPage = page => (dispatch, getState) => {
-  dispatch({
-    type: 'SET_PAGE',
-    page,
-  });
-  dispatch(request(getState().page));
-};
-
 export const request =
   (page = 0, method = 'GET') =>
   dispatch => {
-    console.log('request');
     dispatch(setLoading(true));
     axios({
       url:
@@ -49,7 +51,11 @@ export const request =
       headers: {Accept: 'application/vnd.github.v3+json'},
     })
       .then(response => {
-        dispatch(setData(response.data));
+        if (response.status === 200) {
+          dispatch(setData(response.data));
+        } else {
+          dispatch(setError(response.error));
+        }
       })
       .catch(error => {
         dispatch(setError(error.message));
@@ -62,24 +68,26 @@ const requestReducer = (state = initialState, action) => {
       return {
         ...state,
         loading: action.loading,
-        error: null,
+        error: initialState.error,
       };
     case 'SET_DATA':
       return {
         ...state,
         data: action.data,
-        loading: false,
+        toUpdate: action.toUpdate,
+        loading: initialState.loading,
       };
     case 'SET_ERROR':
       return {
         ...state,
+        toUpdate: initialState.toUpdate,
         error: action.error,
-        loading: false,
+        loading: initialState.loading,
       };
-    case 'SET_PAGE':
+    case 'SET_READY_TO_UPDATE':
       return {
         ...state,
-        page: action.page,
+        toUpdate: initialState.toUpdate,
       };
     default:
       return state;

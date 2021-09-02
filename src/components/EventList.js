@@ -1,41 +1,34 @@
 import React, {useEffect, useState} from 'react';
-import {FlatList, Text, View} from 'react-native';
+import {FlatList, View} from 'react-native';
 import {connect} from 'react-redux';
 
 import AppHeader from './AppHeader';
 import ListItem from '../views/ListItem';
 import {styles} from '../helpers';
-import {request} from '../store/events.store';
-import {UPDATE_TIME} from '../config';
+import {request as requestApi} from '../store/events.store';
+import {REFRESH_TIMEOUT} from '../config';
 
-const EventList = ({data, page, request, route, navigation}) => {
+const setRefreshTimer = (setTimer, request) => {
+  request();
+  setTimer(() => setInterval(request, REFRESH_TIMEOUT * 1000));
+};
+
+const clearRefreshTimer = (setTimer, timer) =>
+  timer && clearInterval(timer) && setTimer(null);
+
+const EventList = ({data, request, route, navigation}) => {
   const [timer, setTimer] = useState(null);
-  useEffect(
-    () =>
-      navigation.addListener('focus', () => {
-        request(page);
-        setTimer(
-          setInterval(() => {
-            request(page);
-          }, UPDATE_TIME * 1000),
-        );
-      }),
-    [navigation, page, setTimer, request],
-  );
+  useEffect(() => {
+    navigation.addListener('focus', () => setRefreshTimer(setTimer, request));
+  }, [navigation, setTimer, request]);
 
-  useEffect(
-    () =>
-      navigation.addListener(
-        'blur',
-        () => timer && clearInterval(timer) && setTimer(null),
-      ),
-    [navigation, setTimer, timer],
-  );
+  useEffect(() => {
+    navigation.addListener('blur', () => clearRefreshTimer(setTimer, timer));
+  }, [navigation, setTimer, timer]);
 
   return (
     <View style={styles.container}>
       <AppHeader />
-      <Text>Страница {page}</Text>
       <FlatList
         data={data}
         renderItem={({item}) => (
@@ -48,8 +41,7 @@ const EventList = ({data, page, request, route, navigation}) => {
 };
 
 const mapStateToProps = store => ({
-  page: store.page,
   data: store.data,
 });
 
-export default connect(mapStateToProps, {request})(EventList);
+export default connect(mapStateToProps, {request: requestApi})(EventList);
