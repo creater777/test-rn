@@ -18,6 +18,7 @@ const PushEvent = ({event}) => (
 const EventDetail = ({navigation, route, path, events}) => {
   const event = events.find(event => route.params.id === event.id);
   const created = event && parseDate(event.created_at);
+  console.log('render EventDetail');
   return (
     <View style={styles.container}>
       <AppHeader />

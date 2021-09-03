@@ -9,6 +9,7 @@ import {request as requestApi} from '../store/events.store';
 import {REFRESH_TIMEOUT} from '../config';
 
 const setRefreshTimer = (setTimer, request) => {
+  console.log('set timer');
   request();
   setTimer(() => setInterval(request, REFRESH_TIMEOUT * 1000));
 };
